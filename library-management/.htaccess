@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect all requests to public directory except for assets
+RewriteCond %{REQUEST_URI} !^/assets/
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Handle 404 errors
+ErrorDocument 404 /public/index.php
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# PHP error handling
+php_flag display_errors on
+php_value error_reporting E_ALL
