@@ -1,23 +1,43 @@
+# Enable URL rewriting
 RewriteEngine On
-RewriteBase /
 
-# Redirect all requests to public directory except for assets
-RewriteCond %{REQUEST_URI} !^/assets/
-RewriteCond %{REQUEST_URI} !^/public/
+# Set base directory
+RewriteBase /library-management/public/
+
+# Redirect all requests to public directory if not already there
+RewriteCond %{REQUEST_URI} !^/library-management/public/
 RewriteRule ^(.*)$ public/$1 [L]
 
-# Handle 404 errors
-ErrorDocument 404 /public/index.php
+# Handle requests for non-existent files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Prevent directory listing
 Options -Indexes
 
-# Protect sensitive files
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Enable PHP error logging
+php_flag log_errors on
+php_value error_log logs/error.log
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Deny access to sensitive files
 <FilesMatch "^\.">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# PHP error handling
-php_flag display_errors on
-php_value error_reporting E_ALL
+<FilesMatch "\.(sql|log|sqlite)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
