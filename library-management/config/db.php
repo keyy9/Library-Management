@@ -7,13 +7,18 @@ class Database {
 
     private function __construct() {
         try {
-            $this->conn = new PDO('sqlite:' . realpath(DB_PATH));
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            
-            // Enable foreign key support for SQLite
-            $this->conn->exec('PRAGMA foreign_keys = ON;');
+            if (DB_TYPE === 'mysql') {
+                $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+                $this->conn = new PDO($dsn, DB_USER, DB_PASS);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+                // For MySQL, we don't need the PRAGMA foreign_keys command
+            } else {
+                throw new Exception("Unsupported database type");
+            }
+            error_log('Database connection established');
         } catch(PDOException $e) {
+            error_log("Connection Error: " . $e->getMessage());
             die("Connection failed: " . $e->getMessage());
         }
     }
