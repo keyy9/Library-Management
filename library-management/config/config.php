@@ -1,11 +1,15 @@
 <?php
-// Database configuration
-define('DB_TYPE', 'sqlite');
-define('DB_PATH', __DIR__ . '/../database.sqlite');
+// Database configuration for XAMPP MySQL
+define('DB_TYPE', 'mysql');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'library_management');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
 // Application configuration
 define('SITE_NAME', 'Library Management System');
-define('BASE_URL', 'http://localhost:8000');
+// Change this to your XAMPP URL path
+define('BASE_URL', 'http://localhost/library-management/public');
 
 // Session configuration
 ini_set('session.cookie_httponly', 1);
