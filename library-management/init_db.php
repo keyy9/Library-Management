@@ -26,6 +26,21 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     echo "\nAdmin user details:\n";
     print_r($user);
+
+    // Verify sample data
+    echo "\nSample data verification:\n";
+    
+    echo "\nCategories:\n";
+    $stmt = $db->query("SELECT * FROM categories");
+    print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
+    
+    echo "\nAuthors:\n";
+    $stmt = $db->query("SELECT * FROM authors");
+    print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
+    
+    echo "\nBooks:\n";
+    $stmt = $db->query("SELECT * FROM books");
+    print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
     
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage() . "\n");
